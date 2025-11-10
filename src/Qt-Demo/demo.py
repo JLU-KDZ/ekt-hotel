@@ -55,3 +55,4 @@ class Ui_MainWindow(object):
         self.pushButton_3.setText(_translate("MainWindow", "摸摸头"))
         self.pushButton.setText(_translate("MainWindow", "好吗？"))
 import demo_rc
+#修复一个bug

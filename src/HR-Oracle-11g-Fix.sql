@@ -1,0 +1,1250 @@
+/*
+ Navicat Premium Dump db - Modified for Oracle 11g Compatibility
+ With DROP TABLE existence check to avoid ORA-00942 errors
+
+ Source Server         : oracle
+ Source Server Type    : Oracle
+ Source Server Version : 190000 (Oracle Database 19c Enterprise Edition Release 19.0.0.0.0 - Production)
+ Source Host           : localhost:1521
+ Source Schema         : HR
+
+ Target Server Type    : Oracle
+ Target Server Version : 110200 (Oracle Database 11g Enterprise Edition Release 11.2.0.0.0)
+ File Encoding         : 65001
+
+ Date: 15/04/2025
+*/
+
+-- 安全DROP表的辅助函数
+BEGIN
+  EXECUTE IMMEDIATE 'CREATE OR REPLACE PROCEDURE SAFE_DROP_TABLE(p_table_name IN VARCHAR2) IS
+    v_count NUMBER;
+    table_doesnt_exist EXCEPTION;
+    PRAGMA EXCEPTION_INIT(table_doesnt_exist, -942);
+  BEGIN
+    BEGIN
+      EXECUTE IMMEDIATE ''SELECT COUNT(*) FROM ALL_TABLES WHERE TABLE_NAME = '''''' || UPPER(p_table_name) || '''''' AND OWNER = USER'' INTO v_count;
+      IF v_count > 0 THEN
+        EXECUTE IMMEDIATE ''DROP TABLE '' || p_table_name;
+      END IF;
+    EXCEPTION
+      WHEN table_doesnt_exist THEN
+        NULL;
+    END;
+  END;';
+END;
+/
+
+-- ----------------------------
+-- Table structure for BOOKING_CLIENT
+-- ----------------------------
+BEGIN
+  SAFE_DROP_TABLE('BOOKING_CLIENT');
+END;
+/
+
+CREATE TABLE "HR"."BOOKING_CLIENT" (
+  "CID" VARCHAR2(255) NOT NULL,
+  "RID" VARCHAR2(255) NOT NULL,
+  "START_TIME" DATE,
+  "END_TIME" DATE,
+  "BOOKING_TIME" TIMESTAMP DEFAULT SYSTIMESTAMP,
+  "REMARK" VARCHAR2(255)
+)
+LOGGING
+NOCOMPRESS
+PCTFREE 10
+INITRANS 1
+STORAGE (
+  INITIAL 65536 
+  NEXT 1048576 
+  MINEXTENTS 1
+  MAXEXTENTS 2147483645
+  BUFFER_POOL DEFAULT
+)
+PARALLEL 1
+NOCACHE
+;
+
+-- ----------------------------
+-- Table structure for BOOKING_TEAM
+-- ----------------------------
+BEGIN
+  SAFE_DROP_TABLE('BOOKING_TEAM');
+END;
+/
+
+CREATE TABLE "HR"."BOOKING_TEAM" (
+  "TID" VARCHAR2(255) NOT NULL,
+  "RID" VARCHAR2(255) NOT NULL,
+  "START_TIME" DATE,
+  "END_TIME" DATE,
+  "BOOKING_TIME" TIMESTAMP DEFAULT SYSTIMESTAMP,
+  "REMARK" VARCHAR2(255)
+)
+LOGGING
+NOCOMPRESS
+PCTFREE 10
+INITRANS 1
+STORAGE (
+  INITIAL 65536 
+  NEXT 1048576 
+  MINEXTENTS 1
+  MAXEXTENTS 2147483645
+  BUFFER_POOL DEFAULT
+)
+PARALLEL 1
+NOCACHE
+;
+
+-- ----------------------------
+-- Table structure for CHECKIN_CLIENT
+-- ----------------------------
+BEGIN
+  SAFE_DROP_TABLE('CHECKIN_CLIENT');
+END;
+/
+
+CREATE TABLE "HR"."CHECKIN_CLIENT" (
+  "RID" VARCHAR2(255) NOT NULL,
+  "CID" VARCHAR2(255) NOT NULL,
+  "START_TIME" DATE,
+  "END_TIME" DATE,
+  "TOTAL_PRICE" VARCHAR2(255),
+  "CHECK_IN_SID" VARCHAR2(255),
+  "REMARK" VARCHAR2(255)
+)
+LOGGING
+NOCOMPRESS
+PCTFREE 10
+INITRANS 1
+STORAGE (
+  INITIAL 65536 
+  NEXT 1048576 
+  MINEXTENTS 1
+  MAXEXTENTS 2147483645
+  BUFFER_POOL DEFAULT
+)
+PARALLEL 1
+NOCACHE
+;
+
+-- ----------------------------
+-- Table structure for CHECKIN_TEAM
+-- ----------------------------
+BEGIN
+  SAFE_DROP_TABLE('CHECKIN_TEAM');
+END;
+/
+
+CREATE TABLE "HR"."CHECKIN_TEAM" (
+  "RID" VARCHAR2(255) NOT NULL,
+  "TID" VARCHAR2(255) NOT NULL,
+  "START_TIME" DATE,
+  "END_TIME" DATE,
+  "TOTAL_PRICE" VARCHAR2(255),
+  "CHECK_IN_SID" VARCHAR2(255),
+  "REMARK" VARCHAR2(255)
+)
+LOGGING
+NOCOMPRESS
+PCTFREE 10
+INITRANS 1
+STORAGE (
+  INITIAL 65536 
+  NEXT 1048576 
+  MINEXTENTS 1
+  MAXEXTENTS 2147483645
+  BUFFER_POOL DEFAULT
+)
+PARALLEL 1
+NOCACHE
+;
+
+-- ----------------------------
+-- Table structure for CLIENT
+-- ----------------------------
+BEGIN
+  SAFE_DROP_TABLE('CLIENT');
+END;
+/
+
+CREATE TABLE "HR"."CLIENT" (
+  "CNAME" VARCHAR2(255) NOT NULL,
+  "CID" VARCHAR2(255) NOT NULL,
+  "CPHONE" VARCHAR2(255),
+  "CAGE" VARCHAR2(255) NOT NULL,
+  "CSEX" VARCHAR2(255),
+  "REGISTER_SID" VARCHAR2(255),
+  "ACCOMODATION_TIMES" NUMBER DEFAULT 0,
+  "REGISTER_TIME" TIMESTAMP DEFAULT SYSTIMESTAMP
+)
+LOGGING
+NOCOMPRESS
+PCTFREE 10
+INITRANS 1
+STORAGE (
+  INITIAL 65536 
+  NEXT 1048576 
+  MINEXTENTS 1
+  MAXEXTENTS 2147483645
+  BUFFER_POOL DEFAULT
+)
+PARALLEL 1
+NOCACHE
+;
+
+-- ----------------------------
+-- Table structure for HOTELORDER
+-- ----------------------------
+BEGIN
+  SAFE_DROP_TABLE('HOTELORDER');
+END;
+/
+
+CREATE TABLE "HR"."HOTELORDER" (
+  "ID" VARCHAR2(255) NOT NULL,
+  "ORDERTYPE" VARCHAR2(255) NOT NULL,
+  "START_TIME" DATE NOT NULL,
+  "END_TIME" DATE NOT NULL,
+  "RID" VARCHAR2(255) NOT NULL,
+  "PAY_TYPE" VARCHAR2(255),
+  "MONEY" VARCHAR2(255),
+  "REMARK" VARCHAR2(255),
+  "ORDER_TIME" TIMESTAMP DEFAULT SYSTIMESTAMP,
+  "REGISTER_SID" VARCHAR2(255)
+)
+LOGGING
+NOCOMPRESS
+PCTFREE 10
+INITRANS 1
+STORAGE (
+  INITIAL 65536 
+  NEXT 1048576 
+  MINEXTENTS 1
+  MAXEXTENTS 2147483645
+  BUFFER_POOL DEFAULT
+)
+PARALLEL 1
+NOCACHE
+;
+
+-- ----------------------------
+-- Table structure for HOTELORDER_V1
+-- ----------------------------
+BEGIN
+  SAFE_DROP_TABLE('HOTELORDER_V1');
+END;
+/
+
+CREATE TABLE "HR"."HOTELORDER_V1" (
+  "ORDER_ID" NUMBER NOT NULL,
+  "ID" VARCHAR2(255) NOT NULL,
+  "ORDERTYPE" VARCHAR2(255) NOT NULL,
+  "START_TIME" DATE NOT NULL,
+  "END_TIME" DATE NOT NULL,
+  "RID" VARCHAR2(255) NOT NULL,
+  "PAY_TYPE" VARCHAR2(50),
+  "PAY_STATUS" VARCHAR2(10) DEFAULT 'pending' NOT NULL,
+  "MONEY" NUMBER(10,2) NOT NULL,
+  "ORDER_STATUS" VARCHAR2(10) DEFAULT 'pending' NOT NULL,
+  "REMARK" VARCHAR2(255),
+  "ORDER_TIME" TIMESTAMP DEFAULT SYSTIMESTAMP,
+  "REGISTER_SID" VARCHAR2(255)
+)
+LOGGING
+NOCOMPRESS
+PCTFREE 10
+INITRANS 1
+STORAGE (
+  INITIAL 65536 
+  NEXT 1048576 
+  MINEXTENTS 1
+  MAXEXTENTS 2147483645
+  BUFFER_POOL DEFAULT
+)
+PARALLEL 1
+NOCACHE
+;
+
+-- ----------------------------
+-- Table structure for INVOICE
+-- ----------------------------
+BEGIN
+  SAFE_DROP_TABLE('INVOICE');
+END;
+/
+
+CREATE TABLE "HR"."INVOICE" (
+  "INVOICE_ID" NUMBER NOT NULL,
+  "ORDER_ID" NUMBER NOT NULL,
+  "INVOICE_TITLE" VARCHAR2(255) NOT NULL,
+  "INVOICE_TYPE" VARCHAR2(10) DEFAULT 'Electronic' NOT NULL,
+  "INVOICE_AMOUNT" NUMBER(10,2) NOT NULL,
+  "TAX_NUMBER" VARCHAR2(50),
+  "INVOICE_STATUS" VARCHAR2(10) DEFAULT 'pending' NOT NULL,
+  "ISSUE_TIME" TIMESTAMP,
+  "REMARK" VARCHAR2(255)
+)
+LOGGING
+NOCOMPRESS
+PCTFREE 10
+INITRANS 1
+STORAGE (
+  INITIAL 65536 
+  NEXT 1048576 
+  MINEXTENTS 1
+  MAXEXTENTS 2147483645
+  BUFFER_POOL DEFAULT
+)
+PARALLEL 1
+NOCACHE
+;
+
+-- ----------------------------
+-- Table structure for ORDER_HISTORY
+-- ----------------------------
+BEGIN
+  SAFE_DROP_TABLE('ORDER_HISTORY');
+END;
+/
+
+CREATE TABLE "HR"."ORDER_HISTORY" (
+  "HISTORY_ID" NUMBER NOT NULL,
+  "ORDER_ID" NUMBER NOT NULL,
+  "PREVIOUS_STATUS" VARCHAR2(10) NOT NULL,
+  "NEW_STATUS" VARCHAR2(10) NOT NULL,
+  "CHANGE_TIME" TIMESTAMP DEFAULT SYSTIMESTAMP NOT NULL,
+  "CHANGED_BY" VARCHAR2(255) NOT NULL,
+  "REMARK" VARCHAR2(255)
+)
+LOGGING
+NOCOMPRESS
+PCTFREE 10
+INITRANS 1
+STORAGE (
+  INITIAL 65536 
+  NEXT 1048576 
+  MINEXTENTS 1
+  MAXEXTENTS 2147483645
+  BUFFER_POOL DEFAULT
+)
+PARALLEL 1
+NOCACHE
+;
+
+-- ----------------------------
+-- Table structure for PAYMENT
+-- ----------------------------
+BEGIN
+  SAFE_DROP_TABLE('PAYMENT');
+END;
+/
+
+CREATE TABLE "HR"."PAYMENT" (
+  "PAYMENT_ID" NUMBER NOT NULL,
+  "ORDER_ID" NUMBER NOT NULL,
+  "PAY_AMOUNT" NUMBER(10,2) NOT NULL,
+  "PAY_METHOD" VARCHAR2(20) NOT NULL,
+  "PAYMENT_STATUS" VARCHAR2(10) DEFAULT 'pending' NOT NULL,
+  "TRANSACTION_ID" VARCHAR2(255),
+  "PAY_TIME" TIMESTAMP DEFAULT SYSTIMESTAMP,
+  "REMARK" VARCHAR2(255)
+)
+LOGGING
+NOCOMPRESS
+PCTFREE 10
+INITRANS 1
+STORAGE (
+  INITIAL 65536 
+  NEXT 1048576 
+  MINEXTENTS 1
+  MAXEXTENTS 2147483645
+  BUFFER_POOL DEFAULT
+)
+PARALLEL 1
+NOCACHE
+;
+
+-- ----------------------------
+-- Table structure for ROOM
+-- ----------------------------
+BEGIN
+  SAFE_DROP_TABLE('ROOM');
+END;
+/
+
+CREATE TABLE "HR"."ROOM" (
+  "RID" VARCHAR2(255) NOT NULL,
+  "RTYPE" VARCHAR2(255) NOT NULL,
+  "RSTOREY" VARCHAR2(255) NOT NULL,
+  "RPRICE" VARCHAR2(255) NOT NULL,
+  "RDESC" VARCHAR2(255),
+  "RPIC" VARCHAR2(255)
+)
+LOGGING
+NOCOMPRESS
+PCTFREE 10
+INITRANS 1
+STORAGE (
+  INITIAL 65536 
+  NEXT 1048576 
+  MINEXTENTS 1
+  MAXEXTENTS 2147483645
+  BUFFER_POOL DEFAULT
+)
+PARALLEL 1
+NOCACHE
+;
+
+-- ----------------------------
+-- Table structure for STAFF
+-- ----------------------------
+BEGIN
+  SAFE_DROP_TABLE('STAFF');
+END;
+/
+
+CREATE TABLE "HR"."STAFF" (
+  "SID" VARCHAR2(255) NOT NULL,
+  "SNAME" VARCHAR2(255) NOT NULL,
+  "SSEX" VARCHAR2(255),
+  "STIME" DATE,
+  "SUSERNAME" VARCHAR2(255) NOT NULL,
+  "SPASSWORD" VARCHAR2(255) NOT NULL,
+  "SROLE" VARCHAR2(255) NOT NULL,
+  "SIDCARD" VARCHAR2(255) NOT NULL,
+  "SPHONE" VARCHAR2(255),
+  "IMAGE" BLOB
+)
+LOGGING
+NOCOMPRESS
+PCTFREE 10
+INITRANS 1
+STORAGE (
+  INITIAL 65536 
+  NEXT 1048576 
+  MINEXTENTS 1
+  MAXEXTENTS 2147483645
+  BUFFER_POOL DEFAULT
+)
+PARALLEL 1
+NOCACHE
+;
+
+-- ----------------------------
+-- Table structure for TEAM
+-- ----------------------------
+BEGIN
+  SAFE_DROP_TABLE('TEAM');
+END;
+/
+
+CREATE TABLE "HR"."TEAM" (
+  "TNAME" VARCHAR2(255) NOT NULL,
+  "TID" VARCHAR2(255) NOT NULL,
+  "TPHONE" VARCHAR2(255),
+  "CHECK_IN_SID" VARCHAR2(255),
+  "ACCOMODATION_TIMES" NUMBER DEFAULT 0,
+  "REGISTER_TIME" TIMESTAMP DEFAULT SYSTIMESTAMP
+)
+LOGGING
+NOCOMPRESS
+PCTFREE 10
+INITRANS 1
+STORAGE (
+  INITIAL 65536 
+  NEXT 1048576 
+  MINEXTENTS 1
+  MAXEXTENTS 2147483645
+  BUFFER_POOL DEFAULT
+)
+PARALLEL 1
+NOCACHE
+;
+
+-- ----------------------------
+-- 安全DROP序列的辅助函数
+-- ----------------------------
+BEGIN
+  EXECUTE IMMEDIATE 'CREATE OR REPLACE PROCEDURE SAFE_DROP_SEQUENCE(p_seq_name IN VARCHAR2) IS
+    v_count NUMBER;
+    seq_doesnt_exist EXCEPTION;
+    PRAGMA EXCEPTION_INIT(seq_doesnt_exist, -2289);
+  BEGIN
+    BEGIN
+      EXECUTE IMMEDIATE ''SELECT COUNT(*) FROM USER_SEQUENCES WHERE SEQUENCE_NAME = '''''' || UPPER(p_seq_name) || ''''''' INTO v_count;
+      IF v_count > 0 THEN
+        EXECUTE IMMEDIATE ''DROP SEQUENCE '' || p_seq_name;
+      END IF;
+    EXCEPTION
+      WHEN seq_doesnt_exist THEN
+        NULL;
+    END;
+  END;';
+END;
+/
+
+-- ----------------------------
+-- 安全DROP视图的辅助函数
+-- ----------------------------
+BEGIN
+  EXECUTE IMMEDIATE 'CREATE OR REPLACE PROCEDURE SAFE_DROP_VIEW(p_view_name IN VARCHAR2) IS
+    v_count NUMBER;
+    view_doesnt_exist EXCEPTION;
+    PRAGMA EXCEPTION_INIT(view_doesnt_exist, -942);
+  BEGIN
+    BEGIN
+      EXECUTE IMMEDIATE ''SELECT COUNT(*) FROM ALL_VIEWS WHERE VIEW_NAME = '''''' || UPPER(p_view_name) || '''''' AND OWNER = USER'' INTO v_count;
+      IF v_count > 0 THEN
+        EXECUTE IMMEDIATE ''DROP VIEW '' || p_view_name;
+      END IF;
+    EXCEPTION
+      WHEN view_doesnt_exist THEN
+        NULL;
+    END;
+  END;';
+END;
+/
+
+-- ----------------------------
+-- View structure for ADMINISTRATORS
+-- ----------------------------
+BEGIN
+  SAFE_DROP_VIEW('ADMINISTRATORS');
+END;
+/
+
+CREATE OR REPLACE VIEW "HR"."ADMINISTRATORS" AS SELECT sid AS Sid, sname AS Sname, susername AS Susername
+FROM staff
+WHERE srole > 1;
+
+-- ----------------------------
+-- View structure for CUSTOMERS
+-- ----------------------------
+BEGIN
+  SAFE_DROP_VIEW('CUSTOMERS');
+END;
+/
+
+CREATE OR REPLACE VIEW "HR"."CUSTOMERS" AS SELECT cid AS Cid, cname AS Cname, csex AS Csex, cphone AS Cphone
+FROM client;
+
+-- ----------------------------
+-- View structure for LIVING
+-- ----------------------------
+BEGIN
+  SAFE_DROP_VIEW('LIVING');
+END;
+/
+
+CREATE OR REPLACE VIEW "HR"."LIVING" AS SELECT cid AS Cid, rid AS Rid, start_time, end_time, total_price
+FROM checkin_client;
+
+-- ----------------------------
+-- View structure for ROOMS
+-- ----------------------------
+BEGIN
+  SAFE_DROP_VIEW('ROOMS');
+END;
+/
+
+CREATE OR REPLACE VIEW "HR"."ROOMS" AS SELECT rid AS Rid, rtype AS Rtype, rprice AS Rprice, rstorey AS Rstorey
+FROM room;
+
+-- ----------------------------
+-- View structure for V_CLIENT_TEAM_ORDER
+-- ----------------------------
+BEGIN
+  SAFE_DROP_VIEW('V_CLIENT_TEAM_ORDER');
+END;
+/
+
+CREATE OR REPLACE VIEW "HR"."V_CLIENT_TEAM_ORDER" AS SELECT 
+  ho.order_id,
+  c.cname AS client_name,
+  t.tname AS team_name,
+  ho.ordertype,
+  ho.start_time,
+  ho.end_time,
+  ho.money AS total_amount,
+  ho.order_status,
+  p.total_paid,
+  CASE 
+    WHEN p.total_paid >= ho.money THEN 'Fully Paid'
+    WHEN p.total_paid IS NULL OR p.total_paid = 0 THEN 'Unpaid'
+    ELSE 'Partially Paid'
+  END AS payment_status
+FROM 
+  hotelorder_v1 ho
+  LEFT JOIN client c ON ho.ordertype = '个人' AND ho.id = c.cid
+  LEFT JOIN team t ON ho.ordertype = '团队' AND ho.id = t.tid
+  LEFT JOIN (
+    SELECT order_id, SUM(pay_amount) AS total_paid
+    FROM payment
+    WHERE payment_status = 'paid'
+    GROUP BY order_id
+  ) p ON ho.order_id = p.order_id;
+
+-- ----------------------------
+-- View structure for V_INVOICE_SUMMARY
+-- ----------------------------
+BEGIN
+  SAFE_DROP_VIEW('V_INVOICE_SUMMARY');
+END;
+/
+
+CREATE OR REPLACE VIEW "HR"."V_INVOICE_SUMMARY" AS SELECT 
+  i.invoice_id,
+  i.order_id,
+  ho.id AS client_or_team_id,
+  ho.ordertype,
+  i.invoice_title,
+  i.invoice_type,
+  i.invoice_amount,
+  i.tax_number,
+  i.invoice_status,
+  i.issue_time
+FROM 
+  invoice i
+  JOIN hotelorder_v1 ho ON i.order_id = ho.order_id;
+
+-- ----------------------------
+-- View structure for V_ORDER_SUMMARY
+-- ----------------------------
+BEGIN
+  SAFE_DROP_VIEW('V_ORDER_SUMMARY');
+END;
+/
+
+CREATE OR REPLACE VIEW "HR"."V_ORDER_SUMMARY" AS SELECT 
+  ho.order_id,
+  ho.id AS client_or_team_id,
+  ho.ordertype,
+  ho.start_time,
+  ho.end_time,
+  ho.rid,
+  ho.money AS total_amount,
+  ho.order_status,
+  ho.pay_type,
+  ho.pay_status,
+  ho.register_sid,
+  p.total_paid,
+  CASE 
+    WHEN p.total_paid >= ho.money THEN 'Fully Paid'
+    WHEN p.total_paid IS NULL OR p.total_paid = 0 THEN 'Unpaid'
+    ELSE 'Partially Paid'
+  END AS payment_status,
+  i.invoice_status,
+  oh.last_status_change,
+  oh.last_changed_by
+FROM 
+  hotelorder_v1 ho
+  LEFT JOIN (
+    SELECT order_id, SUM(pay_amount) AS total_paid
+    FROM payment
+    WHERE payment_status = 'paid'
+    GROUP BY order_id
+  ) p ON ho.order_id = p.order_id
+  LEFT JOIN (
+    SELECT order_id, MAX(issue_time) AS last_invoice_time, MAX(invoice_status) AS invoice_status
+    FROM invoice
+    GROUP BY order_id
+  ) i ON ho.order_id = i.order_id
+  LEFT JOIN (
+    SELECT order_id, MAX(change_time) AS last_status_change, MAX(new_status) AS last_status, MAX(changed_by) AS last_changed_by
+    FROM order_history
+    GROUP BY order_id
+  ) oh ON ho.order_id = oh.order_id;
+
+-- ----------------------------
+-- View structure for V_PAYMENT_DETAILS
+-- ----------------------------
+BEGIN
+  SAFE_DROP_VIEW('V_PAYMENT_DETAILS');
+END;
+/
+
+CREATE OR REPLACE VIEW "HR"."V_PAYMENT_DETAILS" AS SELECT 
+  p.payment_id,
+  p.order_id,
+  ho.id AS client_or_team_id,
+  ho.ordertype,
+  p.pay_amount,
+  p.pay_method,
+  p.payment_status,
+  p.transaction_id,
+  p.pay_time
+FROM 
+  payment p
+  JOIN hotelorder_v1 ho ON p.order_id = ho.order_id;
+
+-- ----------------------------
+-- Sequence structure for DEPARTMENTS_SEQ
+-- ----------------------------
+BEGIN
+  SAFE_DROP_SEQUENCE('DEPARTMENTS_SEQ');
+END;
+/
+
+CREATE SEQUENCE "HR"."DEPARTMENTS_SEQ" MINVALUE 1 MAXVALUE 9990 INCREMENT BY 10 NOCACHE;
+
+-- ----------------------------
+-- Sequence structure for EMPLOYEES_SEQ
+-- ----------------------------
+BEGIN
+  SAFE_DROP_SEQUENCE('EMPLOYEES_SEQ');
+END;
+/
+
+CREATE SEQUENCE "HR"."EMPLOYEES_SEQ" MINVALUE 1 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 NOCACHE;
+
+-- ----------------------------
+-- Sequence structure for HOTELORDER_V1_SEQ
+-- ----------------------------
+BEGIN
+  SAFE_DROP_SEQUENCE('HOTELORDER_V1_SEQ');
+END;
+/
+
+CREATE SEQUENCE "HR"."HOTELORDER_V1_SEQ" MINVALUE 1 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 NOCACHE;
+
+-- ----------------------------
+-- Sequence structure for INVOICE_SEQ
+-- ----------------------------
+BEGIN
+  SAFE_DROP_SEQUENCE('INVOICE_SEQ');
+END;
+/
+
+CREATE SEQUENCE "HR"."INVOICE_SEQ" MINVALUE 1 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 NOCACHE;
+
+-- ----------------------------
+-- Sequence structure for LOCATIONS_SEQ
+-- ----------------------------
+BEGIN
+  SAFE_DROP_SEQUENCE('LOCATIONS_SEQ');
+END;
+/
+
+CREATE SEQUENCE "HR"."LOCATIONS_SEQ" MINVALUE 1 MAXVALUE 9900 INCREMENT BY 100 NOCACHE;
+
+-- ----------------------------
+-- Sequence structure for ORDER_HISTORY_SEQ
+-- ----------------------------
+BEGIN
+  SAFE_DROP_SEQUENCE('ORDER_HISTORY_SEQ');
+END;
+/
+
+CREATE SEQUENCE "HR"."ORDER_HISTORY_SEQ" MINVALUE 1 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 NOCACHE;
+
+-- ----------------------------
+-- Sequence structure for PAYMENT_SEQ
+-- ----------------------------
+BEGIN
+  SAFE_DROP_SEQUENCE('PAYMENT_SEQ');
+END;
+/
+
+CREATE SEQUENCE "HR"."PAYMENT_SEQ" MINVALUE 1 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 NOCACHE;
+
+-- ----------------------------
+-- Primary Key structure for table BOOKING_CLIENT
+-- ----------------------------
+ALTER TABLE "HR"."BOOKING_CLIENT" ADD CONSTRAINT "PK_BOOKING_CLIENT" PRIMARY KEY ("CID", "RID");
+
+-- ----------------------------
+-- Checks structure for table BOOKING_CLIENT
+-- ----------------------------
+ALTER TABLE "HR"."BOOKING_CLIENT" ADD CONSTRAINT "SYS_C009166" CHECK ("CID" IS NOT NULL);
+ALTER TABLE "HR"."BOOKING_CLIENT" ADD CONSTRAINT "SYS_C009167" CHECK ("RID" IS NOT NULL);
+
+-- ----------------------------
+-- Indexes structure for table BOOKING_CLIENT
+-- ----------------------------
+CREATE INDEX "HR"."IDX_BOOKING_CLIENT_RID"
+  ON "HR"."BOOKING_CLIENT" ("RID" ASC)
+  LOGGING
+PCTFREE 10
+INITRANS 2
+STORAGE (
+  INITIAL 65536 
+  NEXT 1048576 
+  MINEXTENTS 1
+  MAXEXTENTS 2147483645
+  BUFFER_POOL DEFAULT
+);
+
+-- ----------------------------
+-- Primary Key structure for table BOOKING_TEAM
+-- ----------------------------
+ALTER TABLE "HR"."BOOKING_TEAM" ADD CONSTRAINT "PK_BOOKING_TEAM" PRIMARY KEY ("TID", "RID");
+
+-- ----------------------------
+-- Checks structure for table BOOKING_TEAM
+-- ----------------------------
+ALTER TABLE "HR"."BOOKING_TEAM" ADD CONSTRAINT "SYS_C009172" CHECK ("TID" IS NOT NULL);
+ALTER TABLE "HR"."BOOKING_TEAM" ADD CONSTRAINT "SYS_C009173" CHECK ("RID" IS NOT NULL);
+
+-- ----------------------------
+-- Indexes structure for table BOOKING_TEAM
+-- ----------------------------
+CREATE INDEX "HR"."IDX_BOOKING_TEAM_RID"
+  ON "HR"."BOOKING_TEAM" ("RID" ASC)
+  LOGGING
+PCTFREE 10
+INITRANS 2
+STORAGE (
+  INITIAL 65536 
+  NEXT 1048576 
+  MINEXTENTS 1
+  MAXEXTENTS 2147483645
+  BUFFER_POOL DEFAULT
+);
+
+-- ----------------------------
+-- Primary Key structure for table CHECKIN_CLIENT
+-- ----------------------------
+ALTER TABLE "HR"."CHECKIN_CLIENT" ADD CONSTRAINT "PK_CHECKIN_CLIENT" PRIMARY KEY ("RID", "CID");
+
+-- ----------------------------
+-- Checks structure for table CHECKIN_CLIENT
+-- ----------------------------
+ALTER TABLE "HR"."CHECKIN_CLIENT" ADD CONSTRAINT "SYS_C009177" CHECK ("RID" IS NOT NULL);
+ALTER TABLE "HR"."CHECKIN_CLIENT" ADD CONSTRAINT "SYS_C009178" CHECK ("CID" IS NOT NULL);
+
+-- ----------------------------
+-- Indexes structure for table CHECKIN_CLIENT
+-- ----------------------------
+CREATE INDEX "HR"."IDX_CHECKIN_CLIENT_CID"
+  ON "HR"."CHECKIN_CLIENT" ("CID" ASC)
+  LOGGING
+PCTFREE 10
+INITRANS 2
+STORAGE (
+  INITIAL 65536 
+  NEXT 1048576 
+  MINEXTENTS 1
+  MAXEXTENTS 2147483645
+  BUFFER_POOL DEFAULT
+);
+CREATE INDEX "HR"."IDX_CHECKIN_CLIENT_SID"
+  ON "HR"."CHECKIN_CLIENT" ("CHECK_IN_SID" ASC)
+  LOGGING
+PCTFREE 10
+INITRANS 2
+STORAGE (
+  INITIAL 65536 
+  NEXT 1048576 
+  MINEXTENTS 1
+  MAXEXTENTS 2147483645
+  BUFFER_POOL DEFAULT
+);
+
+-- ----------------------------
+-- Triggers structure for table CHECKIN_CLIENT
+-- ----------------------------
+CREATE TRIGGER "HR"."UPDATE_INDIVIDUAL_TIMES" AFTER INSERT ON "HR"."CHECKIN_CLIENT" REFERENCING OLD AS "OLD" NEW AS "NEW" FOR EACH ROW 
+BEGIN
+  UPDATE client SET accomodation_times = NVL(accomodation_times, 0) + 1 
+  WHERE cid = :NEW.cid;
+END;
+/
+
+-- ----------------------------
+-- Primary Key structure for table CHECKIN_TEAM
+-- ----------------------------
+ALTER TABLE "HR"."CHECKIN_TEAM" ADD CONSTRAINT "PK_CHECKIN_TEAM" PRIMARY KEY ("RID", "TID");
+
+-- ----------------------------
+-- Checks structure for table CHECKIN_TEAM
+-- ----------------------------
+ALTER TABLE "HR"."CHECKIN_TEAM" ADD CONSTRAINT "SYS_C009183" CHECK ("RID" IS NOT NULL);
+ALTER TABLE "HR"."CHECKIN_TEAM" ADD CONSTRAINT "SYS_C009184" CHECK ("TID" IS NOT NULL);
+
+-- ----------------------------
+-- Indexes structure for table CHECKIN_TEAM
+-- ----------------------------
+CREATE INDEX "HR"."IDX_CHECKIN_TEAM_SID"
+  ON "HR"."CHECKIN_TEAM" ("CHECK_IN_SID" ASC)
+  LOGGING
+PCTFREE 10
+INITRANS 2
+STORAGE (
+  INITIAL 65536 
+  NEXT 1048576 
+  MINEXTENTS 1
+  MAXEXTENTS 2147483645
+  BUFFER_POOL DEFAULT
+);
+CREATE INDEX "HR"."IDX_CHECKIN_TEAM_TID"
+  ON "HR"."CHECKIN_TEAM" ("TID" ASC)
+  LOGGING
+PCTFREE 10
+INITRANS 2
+STORAGE (
+  INITIAL 65536 
+  NEXT 1048576 
+  MINEXTENTS 1
+  MAXEXTENTS 2147483645
+  BUFFER_POOL DEFAULT
+);
+
+-- ----------------------------
+-- Triggers structure for table CHECKIN_TEAM
+-- ----------------------------
+CREATE TRIGGER "HR"."UPDATE_TEAM_TIMES" AFTER INSERT ON "HR"."CHECKIN_TEAM" REFERENCING OLD AS "OLD" NEW AS "NEW" FOR EACH ROW 
+BEGIN
+  UPDATE team SET accomodation_times = NVL(accomodation_times, 0) + 1 
+  WHERE tid = :NEW.tid;
+END;
+/
+
+-- ----------------------------
+-- Primary Key structure for table CLIENT
+-- ----------------------------
+ALTER TABLE "HR"."CLIENT" ADD CONSTRAINT "PK_CLIENT" PRIMARY KEY ("CID");
+
+-- ----------------------------
+-- Checks structure for table CLIENT
+-- ----------------------------
+ALTER TABLE "HR"."CLIENT" ADD CONSTRAINT "SYS_C009157" CHECK ("CNAME" IS NOT NULL);
+ALTER TABLE "HR"."CLIENT" ADD CONSTRAINT "SYS_C009158" CHECK ("CID" IS NOT NULL);
+ALTER TABLE "HR"."CLIENT" ADD CONSTRAINT "SYS_C009159" CHECK ("CAGE" IS NOT NULL);
+
+-- ----------------------------
+-- Indexes structure for table CLIENT
+-- ----------------------------
+CREATE INDEX "HR"."IDX_CLIENT_CID_SID"
+  ON "HR"."CLIENT" ("CID" ASC, "REGISTER_SID" ASC)
+  LOGGING
+PCTFREE 10
+INITRANS 2
+STORAGE (
+  INITIAL 65536 
+  NEXT 1048576 
+  MINEXTENTS 1
+  MAXEXTENTS 2147483645
+  BUFFER_POOL DEFAULT
+);
+CREATE INDEX "HR"."IDX_CLIENT_SID"
+  ON "HR"."CLIENT" ("REGISTER_SID" ASC)
+  LOGGING
+PCTFREE 10
+INITRANS 2
+STORAGE (
+  INITIAL 65536 
+  NEXT 1048576 
+  MINEXTENTS 1
+  MAXEXTENTS 2147483645
+  BUFFER_POOL DEFAULT
+);
+
+-- ----------------------------
+-- Primary Key structure for table HOTELORDER
+-- ----------------------------
+ALTER TABLE "HR"."HOTELORDER" ADD CONSTRAINT "PK_HOTELORDER" PRIMARY KEY ("ID", "START_TIME", "END_TIME", "RID", "ORDERTYPE");
+
+-- ----------------------------
+-- Checks structure for table HOTELORDER
+-- ----------------------------
+ALTER TABLE "HR"."HOTELORDER" ADD CONSTRAINT "SYS_C009189" CHECK ("ID" IS NOT NULL);
+ALTER TABLE "HR"."HOTELORDER" ADD CONSTRAINT "SYS_C009190" CHECK ("ORDERTYPE" IS NOT NULL);
+ALTER TABLE "HR"."HOTELORDER" ADD CONSTRAINT "SYS_C009191" CHECK ("START_TIME" IS NOT NULL);
+ALTER TABLE "HR"."HOTELORDER" ADD CONSTRAINT "SYS_C009192" CHECK ("END_TIME" IS NOT NULL);
+ALTER TABLE "HR"."HOTELORDER" ADD CONSTRAINT "SYS_C009193" CHECK ("RID" IS NOT NULL);
+
+-- ----------------------------
+-- Indexes structure for table HOTELORDER
+-- ----------------------------
+CREATE INDEX "HR"."IDX_HOTELORDER_RID"
+  ON "HR"."HOTELORDER" ("RID" ASC)
+  LOGGING
+PCTFREE 10
+INITRANS 2
+STORAGE (
+  INITIAL 65536 
+  NEXT 1048576 
+  MINEXTENTS 1
+  MAXEXTENTS 2147483645
+  BUFFER_POOL DEFAULT
+);
+CREATE INDEX "HR"."IDX_HOTELORDER_SID"
+  ON "HR"."HOTELORDER" ("REGISTER_SID" ASC)
+  LOGGING
+PCTFREE 10
+INITRANS 2
+STORAGE (
+  INITIAL 65536 
+  NEXT 1048576 
+  MINEXTENTS 1
+  MAXEXTENTS 2147483645
+  BUFFER_POOL DEFAULT
+);
+
+-- ----------------------------
+-- Primary Key structure for table HOTELORDER_V1
+-- ----------------------------
+ALTER TABLE "HR"."HOTELORDER_V1" ADD CONSTRAINT "PK_HOTELORDER_V1" PRIMARY KEY ("ORDER_ID");
+
+-- ----------------------------
+-- Checks structure for table HOTELORDER_V1
+-- ----------------------------
+ALTER TABLE "HR"."HOTELORDER_V1" ADD CONSTRAINT "CK_HOTELORDER_V1_ORDER_STATUS" CHECK (order_status IN ('pending', 'paid', 'cancelled', 'completed'));
+ALTER TABLE "HR"."HOTELORDER_V1" ADD CONSTRAINT "CK_HOTELORDER_V1_PAY_STATUS" CHECK (pay_status IN ('pending', 'paid', 'failed'));
+ALTER TABLE "HR"."HOTELORDER_V1" ADD CONSTRAINT "SYS_C009197" CHECK ("ORDER_ID" IS NOT NULL);
+ALTER TABLE "HR"."HOTELORDER_V1" ADD CONSTRAINT "SYS_C009198" CHECK ("ID" IS NOT NULL);
+ALTER TABLE "HR"."HOTELORDER_V1" ADD CONSTRAINT "SYS_C009199" CHECK ("ORDERTYPE" IS NOT NULL);
+ALTER TABLE "HR"."HOTELORDER_V1" ADD CONSTRAINT "SYS_C009200" CHECK ("START_TIME" IS NOT NULL);
+ALTER TABLE "HR"."HOTELORDER_V1" ADD CONSTRAINT "SYS_C009201" CHECK ("END_TIME" IS NOT NULL);
+ALTER TABLE "HR"."HOTELORDER_V1" ADD CONSTRAINT "SYS_C009202" CHECK ("RID" IS NOT NULL);
+ALTER TABLE "HR"."HOTELORDER_V1" ADD CONSTRAINT "SYS_C009203" CHECK ("PAY_STATUS" IS NOT NULL);
+ALTER TABLE "HR"."HOTELORDER_V1" ADD CONSTRAINT "SYS_C009204" CHECK ("MONEY" IS NOT NULL);
+ALTER TABLE "HR"."HOTELORDER_V1" ADD CONSTRAINT "SYS_C009205" CHECK ("ORDER_STATUS" IS NOT NULL);
+
+-- ----------------------------
+-- Indexes structure for table HOTELORDER_V1
+-- ----------------------------
+CREATE INDEX "HR"."IDX_HOTELORDER_V1_ID"
+  ON "HR"."HOTELORDER_V1" ("ID" ASC)
+  LOGGING
+PCTFREE 10
+INITRANS 2
+STORAGE (
+  INITIAL 65536 
+  NEXT 1048576 
+  MINEXTENTS 1
+  MAXEXTENTS 2147483645
+  BUFFER_POOL DEFAULT
+);
+CREATE INDEX "HR"."IDX_HOTELORDER_V1_RID"
+  ON "HR"."HOTELORDER_V1" ("RID" ASC)
+  LOGGING
+PCTFREE 10
+INITRANS 2
+STORAGE (
+  INITIAL 65536 
+  NEXT 1048576 
+  MINEXTENTS 1
+  MAXEXTENTS 2147483645
+  BUFFER_POOL DEFAULT
+);
+CREATE INDEX "HR"."IDX_HOTELORDER_V1_SID"
+  ON "HR"."HOTELORDER_V1" ("REGISTER_SID" ASC)
+  LOGGING
+PCTFREE 10
+INITRANS 2
+STORAGE (
+  INITIAL 65536 
+  NEXT 1048576 
+  MINEXTENTS 1
+  MAXEXTENTS 2147483645
+  BUFFER_POOL DEFAULT
+);
+CREATE INDEX "HR"."IDX_HOTELORDER_V1_START_TIME"
+  ON "HR"."HOTELORDER_V1" ("START_TIME" ASC)
+  LOGGING
+PCTFREE 10
+INITRANS 2
+STORAGE (
+  INITIAL 65536 
+  NEXT 1048576 
+  MINEXTENTS 1
+  MAXEXTENTS 2147483645
+  BUFFER_POOL DEFAULT
+);
+
+-- ----------------------------
+-- Primary Key structure for table INVOICE
+-- ----------------------------
+ALTER TABLE "HR"."INVOICE" ADD CONSTRAINT "PK_INVOICE" PRIMARY KEY ("INVOICE_ID");
+
+-- ----------------------------
+-- Checks structure for table INVOICE
+-- ----------------------------
+ALTER TABLE "HR"."INVOICE" ADD CONSTRAINT "CK_INVOICE_STATUS" CHECK (invoice_status IN ('pending', 'issued', 'cancelled'));
+ALTER TABLE "HR"."INVOICE" ADD CONSTRAINT "CK_INVOICE_TYPE" CHECK (invoice_type IN ('Electronic', 'Paper'));
+ALTER TABLE "HR"."INVOICE" ADD CONSTRAINT "SYS_C009230" CHECK ("INVOICE_ID" IS NOT NULL);
+ALTER TABLE "HR"."INVOICE" ADD CONSTRAINT "SYS_C009231" CHECK ("ORDER_ID" IS NOT NULL);
+ALTER TABLE "HR"."INVOICE" ADD CONSTRAINT "SYS_C009232" CHECK ("INVOICE_TITLE" IS NOT NULL);
+ALTER TABLE "HR"."INVOICE" ADD CONSTRAINT "SYS_C009233" CHECK ("INVOICE_TYPE" IS NOT NULL);
+ALTER TABLE "HR"."INVOICE" ADD CONSTRAINT "SYS_C009234" CHECK ("INVOICE_AMOUNT" IS NOT NULL);
+ALTER TABLE "HR"."INVOICE" ADD CONSTRAINT "SYS_C009235" CHECK ("INVOICE_STATUS" IS NOT NULL);
+
+-- ----------------------------
+-- Indexes structure for table INVOICE
+-- ----------------------------
+CREATE INDEX "HR"."IDX_INVOICE_ORDER"
+  ON "HR"."INVOICE" ("ORDER_ID" ASC)
+  LOGGING
+PCTFREE 10
+INITRANS 2
+STORAGE (
+  INITIAL 65536 
+  NEXT 1048576 
+  MINEXTENTS 1
+  MAXEXTENTS 2147483645
+  BUFFER_POOL DEFAULT
+);
+CREATE INDEX "HR"."IDX_INVOICE_STATUS"
+  ON "HR"."INVOICE" ("INVOICE_STATUS" ASC)
+  LOGGING
+PCTFREE 10
+INITRANS 2
+STORAGE (
+  INITIAL 65536 
+  NEXT 1048576 
+  MINEXTENTS 1
+  MAXEXTENTS 2147483645
+  BUFFER_POOL DEFAULT
+);
+
+-- ----------------------------
+-- Primary Key structure for table ORDER_HISTORY
+-- ----------------------------
+ALTER TABLE "HR"."ORDER_HISTORY" ADD CONSTRAINT "PK_ORDER_HISTORY" PRIMARY KEY ("HISTORY_ID");
+
+-- ----------------------------
+-- Checks structure for table ORDER_HISTORY
+-- ----------------------------
+ALTER TABLE "HR"."ORDER_HISTORY" ADD CONSTRAINT "CK_ORDER_HISTORY_NEW" CHECK (new_status IN ('pending', 'paid', 'cancelled', 'completed'));
+ALTER TABLE "HR"."ORDER_HISTORY" ADD CONSTRAINT "CK_ORDER_HISTORY_PREV" CHECK (previous_status IN ('pending', 'paid', 'cancelled', 'completed'));
+ALTER TABLE "HR"."ORDER_HISTORY" ADD CONSTRAINT "SYS_C009211" CHECK ("HISTORY_ID" IS NOT NULL);
+ALTER TABLE "HR"."ORDER_HISTORY" ADD CONSTRAINT "SYS_C009212" CHECK ("ORDER_ID" IS NOT NULL);
+ALTER TABLE "HR"."ORDER_HISTORY" ADD CONSTRAINT "SYS_C009213" CHECK ("PREVIOUS_STATUS" IS NOT NULL);
+ALTER TABLE "HR"."ORDER_HISTORY" ADD CONSTRAINT "SYS_C009214" CHECK ("NEW_STATUS" IS NOT NULL);
+ALTER TABLE "HR"."ORDER_HISTORY" ADD CONSTRAINT "SYS_C009215" CHECK ("CHANGE_TIME" IS NOT NULL);
+ALTER TABLE "HR"."ORDER_HISTORY" ADD CONSTRAINT "SYS_C009216" CHECK ("CHANGED_BY" IS NOT NULL);
+
+-- ----------------------------
+-- Indexes structure for table ORDER_HISTORY
+-- ----------------------------
+CREATE INDEX "HR"."IDX_ORDER_HISTORY_ORDER"
+  ON "HR"."ORDER_HISTORY" ("ORDER_ID" ASC)
+  LOGGING
+PCTFREE 10
+INITRANS 2
+STORAGE (
+  INITIAL 65536 
+  NEXT 1048576 
+  MINEXTENTS 1
+  MAXEXTENTS 2147483645
+  BUFFER_POOL DEFAULT
+);
+
+-- ----------------------------
+-- Primary Key structure for table PAYMENT
+-- ----------------------------
+ALTER TABLE "HR"."PAYMENT" ADD CONSTRAINT "PK_PAYMENT" PRIMARY KEY ("PAYMENT_ID");
+
+-- ----------------------------
+-- Checks structure for table PAYMENT
+-- ----------------------------
+ALTER TABLE "HR"."PAYMENT" ADD CONSTRAINT "CK_PAYMENT_METHOD" CHECK (pay_method IN ('WeChat', 'Alipay', 'Credit Card', 'Cash', 'Bank Transfer'));
+ALTER TABLE "HR"."PAYMENT" ADD CONSTRAINT "CK_PAYMENT_STATUS" CHECK (payment_status IN ('pending', 'paid', 'failed', 'refunded'));
+ALTER TABLE "HR"."PAYMENT" ADD CONSTRAINT "SYS_C009221" CHECK ("PAYMENT_ID" IS NOT NULL);
+ALTER TABLE "HR"."PAYMENT" ADD CONSTRAINT "SYS_C009222" CHECK ("ORDER_ID" IS NOT NULL);
+ALTER TABLE "HR"."PAYMENT" ADD CONSTRAINT "SYS_C009223" CHECK ("PAY_AMOUNT" IS NOT NULL);
+ALTER TABLE "HR"."PAYMENT" ADD CONSTRAINT "SYS_C009224" CHECK ("PAY_METHOD" IS NOT NULL);
+ALTER TABLE "HR"."PAYMENT" ADD CONSTRAINT "SYS_C009225" CHECK ("PAYMENT_STATUS" IS NOT NULL);
+
+-- ----------------------------
+-- Indexes structure for table PAYMENT
+-- ----------------------------
+CREATE INDEX "HR"."IDX_PAYMENT_ORDER"
+  ON "HR"."PAYMENT" ("ORDER_ID" ASC)
+  LOGGING
+PCTFREE 10
+INITRANS 2
+STORAGE (
+  INITIAL 65536 
+  NEXT 1048576 
+  MINEXTENTS 1
+  MAXEXTENTS 2147483645
+  BUFFER_POOL DEFAULT
+);
+CREATE INDEX "HR"."IDX_PAYMENT_STATUS"
+  ON "HR"."PAYMENT" ("PAYMENT_STATUS" ASC)
+  LOGGING
+PCTFREE 10
+INITRANS 2
+STORAGE (
+  INITIAL 65536 
+  NEXT 1048576 
+  MINEXTENTS 1
+  MAXEXTENTS 2147483645
+  BUFFER_POOL DEFAULT
+);
+
+-- ----------------------------
+-- Primary Key structure for table ROOM
+-- ----------------------------
+ALTER TABLE "HR"."ROOM" ADD CONSTRAINT "PK_ROOM" PRIMARY KEY ("RID");
+
+-- ----------------------------
+-- Checks structure for table ROOM
+-- ----------------------------
+ALTER TABLE "HR"."ROOM" ADD CONSTRAINT "SYS_C009144" CHECK ("RID" IS NOT NULL);
+ALTER TABLE "HR"."ROOM" ADD CONSTRAINT "SYS_C009145" CHECK ("RTYPE" IS NOT NULL);
+ALTER TABLE "HR"."ROOM" ADD CONSTRAINT "SYS_C009146" CHECK ("RSTOREY" IS NOT NULL);
+ALTER TABLE "HR"."ROOM" ADD CONSTRAINT "SYS_C009147" CHECK ("RPRICE" IS NOT NULL);
+
+-- ----------------------------
+-- Primary Key structure for table STAFF
+-- ----------------------------
+ALTER TABLE "HR"."STAFF" ADD CONSTRAINT "PK_STAFF" PRIMARY KEY ("SID");
+
+-- ----------------------------
+-- Uniques structure for table STAFF
+-- ----------------------------
+ALTER TABLE "HR"."STAFF" ADD CONSTRAINT "UK_STAFF_USERNAME" UNIQUE ("SUSERNAME");
+
+-- ----------------------------
+-- Checks structure for table STAFF
+-- ----------------------------
+ALTER TABLE "HR"."STAFF" ADD CONSTRAINT "SYS_C009149" CHECK ("SID" IS NOT NULL);
+ALTER TABLE "HR"."STAFF" ADD CONSTRAINT "SYS_C009150" CHECK ("SNAME" IS NOT NULL);
+ALTER TABLE "HR"."STAFF" ADD CONSTRAINT "SYS_C009151" CHECK ("SUSERNAME" IS NOT NULL);
+ALTER TABLE "HR"."STAFF" ADD CONSTRAINT "SYS_C009152" CHECK ("SPASSWORD" IS NOT NULL);
+ALTER TABLE "HR"."STAFF" ADD CONSTRAINT "SYS_C009153" CHECK ("SROLE" IS NOT NULL);
+ALTER TABLE "HR"."STAFF" ADD CONSTRAINT "SYS_C009154" CHECK ("SIDCARD" IS NOT NULL);
+
+-- ----------------------------
+-- Primary Key structure for table TEAM
+-- ----------------------------
+ALTER TABLE "HR"."TEAM" ADD CONSTRAINT "PK_TEAM" PRIMARY KEY ("TID");
+
+-- ----------------------------
+-- Checks structure for table TEAM
+-- ----------------------------
+ALTER TABLE "HR"."TEAM" ADD CONSTRAINT "SYS_C009162" CHECK ("TNAME" IS NOT NULL);
+ALTER TABLE "HR"."TEAM" ADD CONSTRAINT "SYS_C009163" CHECK ("TID" IS NOT NULL);
+
+-- ----------------------------
+-- Indexes structure for table TEAM
+-- ----------------------------
+CREATE INDEX "HR"."IDX_TEAM_SID"
+  ON "HR"."TEAM" ("CHECK_IN_SID" ASC)
+  LOGGING
+PCTFREE 10
+INITRANS 2
+STORAGE (
+  INITIAL 65536 
+  NEXT 1048576 
+  MINEXTENTS 1
+  MAXEXTENTS 2147483645
+  BUFFER_POOL DEFAULT
+);
+
+-- ----------------------------
+-- 清理临时创建的存储过程
+-- ----------------------------
+BEGIN
+  EXECUTE IMMEDIATE 'DROP PROCEDURE SAFE_DROP_TABLE';
+  EXECUTE IMMEDIATE 'DROP PROCEDURE SAFE_DROP_SEQUENCE';
+  EXECUTE IMMEDIATE 'DROP PROCEDURE SAFE_DROP_VIEW';
+EXCEPTION
+  WHEN OTHERS THEN NULL;
+END;
+/
